@@ -107,28 +107,18 @@ def downoad_panoramas_from_json_list(json_file_list, saved_path, zoom=4):
 
 
 
-def download_panos_DC_from_jsons():
+def download_panos_DC_from_jsons(saved_path = r'H:\Research\sidewalk_wheelchairs\DC_panoramas_4',  json_files_path = r'D:\Research\sidewalk_wheelchair\jsons', process_cnt = 10, zoom = 4):
     logger.info("Started...")
-    saved_path = r'H:\Research\sidewalk_wheelchairs\DC_panoramas_4'
-    json_files_path = r'D:\Research\sidewalk_wheelchair\jsons'
 
     json_files = glob.glob(os.path.join(json_files_path, "*.json"))
-    zoom = 4
-
-
     # panoIds = [os.path.basename(f)[:-5] for f in json_files]
-
     # downoad_panoramas_from_json_list(json_files, saved_path, zoom)
-
     logger.info("Making mp_list...")
     panoIds_mp = mp.Manager().list()
 
     skips = 24400
     for f in json_files[skips:]:
         panoIds_mp.append(f)
-
-
-    process_cnt = 10
 
     pool = mp.Pool(processes=process_cnt)
 
@@ -394,7 +384,7 @@ def merge_measurements():
 
     print("Done.")
 
-def down_panos_in_area(polyon, saved_path='', col_cnt=100, row_cnt=100, json=True, pano=False, pano_zoom=0, depthmap=False, process_cnt=10):
+def down_panos_in_area(polyon, saved_path='', col_cnt=400, row_cnt=400, json=True, pano=False, pano_zoom=0, depthmap=False, process_cnt=10):
     '''
     Download street view images according to the given polygon
     :param polyon:
@@ -589,11 +579,9 @@ def sort_jsons():
     utils.sort_pano_jsons(r'D:\Research\sidewalk_wheelchair\DC_DOMs', saved_path=r'D:\Research\sidewalk_wheelchair')
 
 
-def download_panoramas():
-    shape_file = r'H:\USC_OneDrive\OneDrive - University of South Carolina\test\Galveston.shp'
+def download_panoramas( shape_file,saved_path):
+   
     AOI = gpd.read_file(shape_file).to_crs("EPSG:4326")
-    saved_path = r'H:\USC_OneDrive\OneDrive - University of South Carolina\test\test_results'
-
     down_panos_in_area(polyon=AOI.iloc[0].geometry, saved_path=saved_path, json=True, process_cnt=10)
     # pass
 
@@ -744,6 +732,10 @@ def draw_panorama_apex(panoIds, json_dir, saved_path, results, local_crs=6487):
 
 
 if __name__ == '__main__':
+
+    # download_panoramas(shape_file = r'C:\Local Storage\Basic Data\Galveston\galveston_wgs1984\galveston_wgs1984.shp',saved_path = r'C:\Local Storage\Basic Data\Galveston\a00_GSV_galvestion')
+    # dir_json_to_csv_list(json_dir=r'C:\Local Storage\Basic Data\Galveston\a00_GSV_galvestion', saved_name=r'C:\Local Storage\Basic Data\Galveston\galveston.txt')
+
     # pending_Ids = collect_links_from_panoramas_mp(r'H:\Research\sidewalk_wheelchair\DC_DOMs')
     # print(len(pending_Ids))
     # utils.save_a_list(pending_Ids, r'H:\Research\sidewalk_wheelchair\pendingIds.txt')
@@ -751,12 +743,12 @@ if __name__ == '__main__':
     # draw_panorama_apex_mp(saved_path=r"H:\USC_OneDrive\OneDrive - University of South Carolina\Research\sidewalk_wheelchair\DC_panoramas\sidewalk_wheelchair",
     #                    json_dir=r'H:\Research\sidewalk_wheelchair\DC_DOMs')
 
-    download_panoramas()
+    # download_panoramas()
     # merge_measurements()
     # dir_json_to_csv_list(json_dir=r'D:\Research\sidewalk_wheelchair\jsons', saved_name=r'D:\Research\sidewalk_wheelchair\jsons250k.txt')
     # sort_jsons()
     # download_panos_DC()
-    # download_panos_DC_from_jsons()
+    download_panos_DC_from_jsons(saved_path=r"C:\Local Storage\Basic Data\Galveston\a01_GSV_galvenston_500_images", json_files_path=r'C:\Local Storage\Basic Data\Galveston\a00_GSV_galvestion_tra_500',process_cnt=8,zoom=4)
     # get_DOMs()
     # get_DOMs()
     # quick_DOM()

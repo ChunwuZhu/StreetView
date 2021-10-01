@@ -191,6 +191,7 @@ class GSV_pano(object):
     def getPanoIDfrmLonlat(self, lon, lat):
         url = "https://maps.googleapis.com/maps/api/js/GeoPhotoService.SingleImageSearch?pb=!1m5!1sapiv3!5sUS!11m2!1m1!1b0!2m4!1m2!3d{0:}!4d{1:}!2d50!3m10!2m2!1sen!2sGB!9m1!1e2!11m4!1m3!1e2!2b1!3e2!4m10!1e1!1e2!1e3!1e4!1e8!1e6!5m1!1e2!6m1!1e2&callback=_xdc_._v2mub5"
         url = url.format(lat, lon)
+        print(url)
         resp = requests.get(url, proxies=None)
         # print(url)
         line = resp.text.replace("/**/_xdc_._v2mub5 && _xdc_._v2mub5( ", "")[:-2]
@@ -221,6 +222,17 @@ class GSV_pano(object):
             return None
 
         return jdata
+
+    def getPanoJsonfrmLonat_chunwu(self, lon, lat):
+        try:
+            panoId, pano_lon, pano_lat = self.getPanoIDfrmLonlat(lon, lat)
+            jdata = self.getJsonfrmPanoID(panoId)
+        except Exception as e:
+            # print("Error in getPanoJsonfrmLonat():", e)
+            logging.exception("Error in getPanoJsonfrmLonat(): %s", e)
+            return None
+    
+        return jdata,panoId
 
 
     def getJsonfrmPanoID(self, panoId, dm=1, saved_path=''):

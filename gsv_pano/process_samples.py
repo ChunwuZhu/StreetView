@@ -107,7 +107,7 @@ def downoad_panoramas_from_json_list(json_file_list, saved_path, zoom=4):
 
 
 
-def download_panos_DC_from_jsons(saved_path = r'H:\Research\sidewalk_wheelchairs\DC_panoramas_4',  json_files_path = r'D:\Research\sidewalk_wheelchair\jsons', process_cnt = 10, zoom = 4):
+def download_panos_DC_from_jsons(saved_path,  json_files_path, process_cnt = 10, zoom = 4):
     logger.info("Started...")
 
     json_files = glob.glob(os.path.join(json_files_path, "*.json"))
@@ -115,10 +115,13 @@ def download_panos_DC_from_jsons(saved_path = r'H:\Research\sidewalk_wheelchairs
     # downoad_panoramas_from_json_list(json_files, saved_path, zoom)
     logger.info("Making mp_list...")
     panoIds_mp = mp.Manager().list()
-
-    skips = 24400
-    for f in json_files[skips:]:
+    
+    for f in json_files:
         panoIds_mp.append(f)
+
+    # skips = 24400
+    # for f in json_files[skips:]:
+    #     panoIds_mp.append(f)
 
     pool = mp.Pool(processes=process_cnt)
 
@@ -127,7 +130,25 @@ def download_panos_DC_from_jsons(saved_path = r'H:\Research\sidewalk_wheelchairs
     pool.close()
     pool.join()
 
+def download_panos_DC_from_jsons_chunwu(saved_path,  json_files_path, process_cnt = 10, zoom = 4):
+    logger.info("Started...")
 
+    json_files = glob.glob(os.path.join(json_files_path, "*.json"))
+    # panoIds = [os.path.basename(f)[:-5] for f in json_files]
+    # downoad_panoramas_from_json_list(json_files, saved_path, zoom)
+    logger.info("Making mp_list...")
+    panoIds_mp = mp.Manager().list()
+    
+    for f in json_files:
+        panoIds_mp.append(f)
+
+
+    pool = mp.Pool(processes=process_cnt)
+
+    for i in range(process_cnt):
+        pool.apply_async(downoad_panoramas_from_json_list, args=(panoIds_mp, saved_path, zoom))
+    pool.close()
+    pool.join()
 
 
 def download_panos_DC():
@@ -748,7 +769,9 @@ if __name__ == '__main__':
     # dir_json_to_csv_list(json_dir=r'D:\Research\sidewalk_wheelchair\jsons', saved_name=r'D:\Research\sidewalk_wheelchair\jsons250k.txt')
     # sort_jsons()
     # download_panos_DC()
-    download_panos_DC_from_jsons(saved_path=r"C:\Local Storage\Basic Data\Galveston\a01_GSV_galvenston_500_images", json_files_path=r'C:\Local Storage\Basic Data\Galveston\a00_GSV_galvestion_tra_500',process_cnt=8,zoom=4)
+    # download_panos_DC_from_jsons(saved_path=r"C:\Local Storage\Basic Data\Galveston\a01_GSV_galvenston_500_images", json_files_path=r'C:\Local Storage\Basic Data\Galveston\a00_GSV_galvestion_tra_500',process_cnt=8,zoom=4)
     # get_DOMs()
     # get_DOMs()
     # quick_DOM()
+
+    download_panos_DC_from_jsons_chunwu(saved_path=r"C:\Local Storage\Code\StreetView\gsv_pano\chunwu\image", json_files_path=r'C:\Local Storage\Code\StreetView\gsv_pano\chunwu\json',process_cnt=4,zoom=4)

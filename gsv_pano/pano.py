@@ -927,7 +927,7 @@ class GSV_pano(object):
         colors = DOM['DOM'].reshape((-1, 3))
         DOM_points = np.concatenate([XYZs, colors], axis=1)
         self.DOM['DOM_points'] = DOM_points
-
+c
         return DOM_points
 
     def get_DOM(self, width = 40, height = 40, resolution=0.03, zoom=3, img_type="DOM",fill_clipped_seg=False):  # return: numpy array,
@@ -1015,7 +1015,6 @@ class GSV_pano(object):
                 logger.exception("Error in get_DOM(): %s", e)
 
 
-
     def col_row_to_angles(self, arr_col, arr_row, zoom=4):
         '''
         Convert the pixels (rows, cols) to spherical coordinates (theta, phi).
@@ -1030,7 +1029,6 @@ class GSV_pano(object):
         thetas = np.pi / 2 - (arr_row ) / image_height * np.pi
         phis = (arr_col ) / image_width * (np.pi * 2) - np.pi
         return thetas, phis
-
 
 
     def col_row_to_points(self, arr_col, arr_row, zoom=4):
